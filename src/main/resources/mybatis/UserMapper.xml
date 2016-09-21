@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.dyl.dao.UserDao">
+
+    <sql id="user_column">
+		id, name, nickname, email,createTime,sex
+  	</sql>
+  <!-- 当数据库中的字段信息和对象的属性不一致时需要通过resultMap来映射 -->  
+  <resultMap type="User" id="userMap">
+      <id column="id" property="id"/>
+      <result column="name" property="name"/>
+      <result column="nickname" property="nickname"/>
+      <result column="email" property="email"/>
+      <result column="createTime" property="createTime"/>
+      <result column="sex" property="sex"/>
+  </resultMap>
+  
+  
+  <!-- 插入用户： 1.由数据库生成id并赋值到user对象 2.输入用对象, 嵌套属性表达式#{team.id} -->
+<insert id="add" parameterType="User" keyProperty="id" useGeneratedKeys="true">
+    INSERT INTO dcUser(name,nickname,email,createTime,sex) 
+		VALUES(#{name},#{nickname},#{email},NOW(),#{sex})
+</insert>
+
+<update id="update" parameterType="User">
+    UPDATE dcUser SET
+    <if test="name != null">name=#{name},</if>
+    <if test="nickname != null">nickname=#{nickname},</if>
+    <if test="email != null">email=#{email},</if>
+    createTime=NOW(),
+    <if test="sex != null">sex=#{sex},</if>
+    id = id
+    WHERE id = #{id}
+</update>
+
+<delete id="delete" parameterType="int">
+    DELETE FROM dcUser WHERE id = #{id}
+</delete>
+
+<select id="get" parameterType="int" resultType="User">
+		SELECT <include refid="user_column"/>	FROM dcUser WHERE id = #{id}
+	</select>
+
+<select id="getAll" resultType="User">
+	SELECT <include refid="user_column"/> FROM dcUser
+</select>
+<select id="getUsersByString" parameterType="string" resultType="User">
+	SELECT <include refid="user_column"/> FROM dcUser
+		<where>
+			<if test="param!=null">
+			        name  LIKE CONCAT('%',#{param},'%')
+			 </if>
+		</where>
+		ORDER BY name 
+</select>
+<!-- #{xx} ? replace   ${xx}   total string replace -->
+<select id="getUsersByParam" parameterType="map" resultType="User">
+		SELECT <include refid="user_column" /> FROM dcUser 
+		<where>
+		    <if test="name!=null">
+		        name  LIKE CONCAT('%',#{name},'%')
+		    </if>
+		    <if test="nickname!=null">
+		        AND nickname LIKE CONCAT('%',#{nickname},'%')
+		    </if>
+		    <if test="email!=null">
+		        AND email = #{email}
+		    </if>
+		    <if test="sex!=null and sex != ''">
+		        AND sex = #{sex}
+		    </if>
+		    <if test="beginTime != null and beginTime != ''">
+                 AND createTime &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                 AND createTime &lt;= #{endTime}
+            </if>
+		</where>
+		<choose>
+		  <when test="orderBy != null and orderBy != ''">
+		      ORDER BY ${orderBy}
+		  </when>
+		  <otherwise>
+		      ORDER BY id 
+		  </otherwise>
+		</choose>
+		LIMIT #{start},#{limit}
+</select>
+	
+<select id="findCount" parameterType="map" resultType="int">
+		SELECT count(*) FROM dcUser 
+		<where>
+		    <if test="name!=null">
+		        name LIKE CONCAT('%',#{name},'%')
+		    </if>
+		    <if test="nickname!=null">
+		        AND nickname LIKE CONCAT('%',#{nickname},'%')
+		    </if>
+		    <if test="email!=null">
+		        AND email = #{email}
+		    </if>
+		    <if test=" sex!=null and sex != ''">
+		        AND sex = #{sex}
+		    </if>
+		      <if test="beginTime != null and beginTime != ''">
+                 AND createTime &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                 AND createTime &lt;= #{endTime}
+            </if>
+		</where>
+</select>
+
+</mapper>

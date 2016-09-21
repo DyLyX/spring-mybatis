@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>智能输入提示</title>
+<link rel="stylesheet" type="text/css" href="jquery.suggest.css">
+<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="j.dimensions.js"></script>
+<script type="text/javascript" src="aircity.js"></script>
+<script type="text/javascript" src="j.suggest.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#arrcity").suggest(citys, {
+			hot_list : commoncitys,
+			dataContainer : '#arrcity_3word',
+			onSelect : function() {
+				$("#city2").click();
+			},
+			attachObject : '#suggest'
+		});
+		$("#city2").suggest(citys, {
+			hot_list : commoncitys,
+			attachObject : "#suggest2"
+		});
+	});
+</script>
+</head>
+<body>
+	<div id="box">
+		<h1>仿机票预定智能输入提示DEMO</h1>
+		<input type="hidden" name="arrcity_3word" id="arrcity_3word" value="" />
+		<label for="arrcity">出发城市：</label><input type="text" name="arrcity"
+			id="arrcity" />
+		<div id='suggest' class="ac_results"></div>
+		<label for="city2">目的城市：</label><input type="text" name="city2"
+			id="city2" />
+		<div id='suggest2' class="ac_results"></div>
+		<p>具体的功能如下：</p>
+		<ol>
+			<li>点击输入框，自动列出热门出行城市；</li>
+			<li>支持中文/拼音/3字码 输入的智能提示；</li>
+			<li>支持键盘方向键选择、回车键确定；</li>
+			<li>支持选择后自定义callback函数；</li>
+			<li>支持IE6、IE7、IE8、Firefox</li>
+		</ol>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>导航栏</title>
+<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(".leve11>a").click(function(){
+        $(this).addClass('current')  //给当前元素添加‘current’样式
+        .next().show()  //下一个元素显示
+        .parent().siblings().children('a').removeClass('current')//父辈的同辈元素的子元素<a>移除‘current’样式
+        .next().hide();  //他们的下一天元素隐藏
+        return false;
+    });
+
+    var $cr = $('#ck');
+    $cr.click(function(){
+      if($cr.is(':checked')){
+        alert('感谢您的支持！你可以继续操作了');
+      }
+    });
+    $('.demo').click(function(){
+      alert('JQuery demo！！');
+    });
+    /**
+    //Dom对象
+    var domObj = document.getElementById('duanxiu'); //获得dom对象
+    var ObjHtml=domObj.innerHTML 
+    alert( ObjHtml); 
+    alert($('#duanxiu').html());
+
+    var $variable = ''//jquery对象
+
+    var variable = '' //DOM对象
+    */
+  });
+
+</script>
+
+
+
+</head>
+<body>
+
+<div class="box">
+  <ul class="menu">
+    <li class="leve11">
+      <a href="#none">衬衫</a>
+      <ul class="level2">
+        <li id="duanxiu"><a href="#none">短袖衬衫</a></li>
+        <li><a href="#none">长袖衬衫</a></li>
+        <li><a href="#none">短袖T恤</a></li>
+        <li><a href="#none">长袖T恤</a></li>
+      </ul>
+    </li>
+    <li class="leve11">
+      <a href="#none">卫衣</a>
+      <ul class="level2">
+        <li><a href="#none">开襟卫衣</a></li>
+        <li><a href="#none">套头卫衣</a></li>
+        <li><a href="#none">运动卫衣</a></li>
+        <li><a href="#none">童装卫衣</a></li>
+      </ul>
+    </li>
+
+    <li class="leve11">
+      <a href="#none">裤子</a>
+      <ul class="level2">
+        <li><a href="#none">短裤</a></li>
+        <li><a href="#none">休闲裤</a></li>
+        <li><a href="#none">牛仔裤</a></li>
+        <li><a href="#none">免烫卡其裤</a></li>
+      </ul>
+    </li>
+  </ul>
+<input type="checkbox" name="aa" id="ck"><label for="cr">我已经阅读了上面制度.</label>
+<p class="demo">惦记我！</p>
+</div>
+
+
+</body>
+</html>

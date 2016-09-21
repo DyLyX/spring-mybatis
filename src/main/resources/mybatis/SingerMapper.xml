@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.dyl.dao.SingerDao">
+
+	<sql id="singer_column">
+		id, singId,type, name, imageUrl,createTime ,updateTime
+	</sql>
+
+	<!-- 插入歌手： 1.由数据库生成id并赋值到对象 2.输入用对象, 嵌套属性表达式#{team.id} -->
+	<insert id="add" parameterType="Singer" keyProperty="id"
+		useGeneratedKeys="true">
+		INSERT INTO singer(singId,type,name,imageUrl,createTime,updateTime)
+		VALUES(#{singId},#{type},#{name},#{imageUrl},NOW(),NOW())
+	</insert>
+
+	<update id="update" parameterType="Singer">
+		UPDATE singer SET
+		<if test="name != null">name=#{name},</if>
+		<if test="singId != null">singId=#{singId},</if>
+		<if test="type != null">type=#{type},</if>
+		<if test="imageUrl != null">imageUrl=#{imageUrl},</if>
+		id = id,
+		updateTime = NOW()
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		DELETE FROM singer WHERE id = #{id}
+	</delete>
+
+	<select id="get" parameterType="long" resultType="Singer">
+		SELECT
+		<include refid="singer_column" />
+		FROM singer WHERE id = #{id}
+	</select>
+
+	<select id="getAll" resultType="Singer">
+		SELECT
+		<include refid="singer_column" />
+		FROM singer
+	</select>
+	<select id="getByName" parameterType="string" resultType="Singer">
+		SELECT <include refid="singer_column"/>	FROM singer WHERE name = #{name} LIMIT 1
+	</select>
+	
+	<select id="getBySingId" parameterType="long" resultType="Singer">
+		SELECT <include refid="singer_column"/> FROM singer WHERE singId = #{singId}
+	</select>
+	<!-- #{xx} ? replace ${xx} total string replace -->
+	<select id="getSingerByParam" parameterType="map" resultType="Singer">
+		SELECT
+		<include refid="singer_column" />
+		FROM singer
+		<where>
+			<if test="name!=null">
+				name LIKE CONCAT('%',#{name},'%')
+			</if>
+			<if test="singId!=null and singId != ''">
+				AND singId = #{singId}
+			</if>
+			<if test="type!=null and type != ''">
+				AND type = #{type}
+			</if>
+			<if test="beginTime != null and beginTime != ''">
+				AND updateTime &gt;= #{beginTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND updateTime &lt;= #{endTime}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY name
+			</otherwise>
+		</choose>
+		LIMIT #{start},#{limit}
+	</select>
+
+	<select id="findCount" parameterType="map" resultType="int">
+		SELECT count(*) FROM singer
+		<where>
+			<if test="name!=null">
+				name LIKE CONCAT('%',#{name},'%')
+			</if>
+			<if test="singId!=null and singId != ''">
+				AND singId = #{singId}
+			</if>
+			<if test="type!=null and type != ''">
+				AND type = #{type}
+			</if>
+			<if test="beginTime != null and beginTime != ''">
+				AND updateTime &gt;= #{beginTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND updateTime &lt;= #{endTime}
+			</if>
+		</where>
+	</select>
+
+</mapper>

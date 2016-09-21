@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.dyl.dao.AddressDao">
+	<cache></cache>
+	<resultMap type="Attachment" id="attachmentMap">
+		<id property="id" column="id_address"/>
+		<result property="name" column="name"/>
+		<result property="relativePath" column="relative_path"/>
+		<result property="createTime" column="createTime"/>
+		<result property="mailId" column="id_mail"/>
+	</resultMap>
+	<insert id="insert" parameterType="Attachment" useGeneratedKeys="true" keyProperty="id_address">
+	 insert into address(id_mail, name, relative_path,createTime) values(#{mailId}, #{name}, #{relativePath},NOW())  
+	</insert>
+	
+	<!--MailMapper中的ResultMap调用这个方法来进行关联-->  
+    <select id="selectByMailId" parameterType="int" resultMap="attachmentMap">  
+        select * where id_mail = #{id}  
+    </select>  
+</mapper>

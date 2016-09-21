@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+	default-lazy-init="false">
+
+    <description>Quartz 任务调度配置</description>
+    
+    <context:component-scan base-package="com.cn.dyl">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+    
+    
+        <!-- Spring注入日期到bean属性-CustomDateEditor -->
+    <!-- 并声明另一个“CustomEditorConfigurer”，使 Spring转换 bean 属性，其类型为java.util.Date。 -->
+    <!-- 声明一个 CustomDateEditor 类将字符串转换成 java.util.Date。 
+    <bean id="dateEditor" class="com.cn.dyl.util.CustomDatePropertyEditor">
+     <property name="format">               
+        <value>yyyy-MM-dd HH:mm:ss</value>           
+    </property>     
+	</bean>   
+    
+    
+   	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<entry key="java.util.Date">
+					<ref bean="dateEditor" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+    -->
+    <bean id="dateFormat" class="java.text.SimpleDateFormat">
+		<constructor-arg value="yyyy-MM-dd HH:mm:ss" />
+	</bean>
+	
+    <!--  -->
+    <bean id="quartzJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="quartzJob" />
+        <property name="targetMethod" value="work" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <!-- 配置触发器 -->
+    <!-- 这里不可以直接在属性jobDetail中引用taskJob，
+    因为他要求的是一个jobDetail类型的对象，
+    所以我们得通过MethodInvokingJobDetailFactoryBean来转一下 
+    -->
+    <bean id="quartzJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="quartzJobDetail" />
+        <property name="startDelay" value="10000" /> <!--延迟10s-->
+         <property name="repeatCount" value="1" /> <!--重复一次-->
+          <!--开始执行时间-->
+         <property name="startTime">
+         	<bean factory-bean="dateFormat" factory-method="parse">
+         	<constructor-arg value="2016-08-02 22:30:00"></constructor-arg>
+         	</bean>
+         </property>
+        <property name="repeatInterval" value="${time.interval}" /><!--每60s启动一次--> 
+    </bean>
+    
+    
+     <!-- 下载 -->
+    <bean id="quartzJobDetailOne" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="quartzJob" />
+        <property name="targetMethod" value="work" />
+        <property name="concurrent" value="false" />
+    </bean>
+     <bean id="quartzJobOneTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="quartzJobDetailOne" />
+        <!-- 五秒后开始执行 -->
+        <property name="startDelay" value="500000" />
+        <!-- 没到指定的时间点执行 -->
+         <!-- 每天的8点到21点每隔1分钟触发，具体说明见附录 -->
+        <property name="cronExpression" value="${dowork.cron}" />
+    </bean>
+    
+    
+    <!-- 爬取音乐列表-->
+    <bean id="musicCollectQuartzJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="musicCollectQuartzJob" />
+        <property name="targetMethod" value="work" />
+        <property name="concurrent" value="false" />
+    </bean>
+     <bean id="musicCollectQuartzJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="musicCollectQuartzJobDetail" />
+        <!-- 五秒后开始执行 -->
+        <property name="startDelay" value="50000" />
+      <!-- 每30分钟执行一次 -->
+        <property name="cronExpression" value="${dowork.cron}" />
+    </bean>
+   
+    
+    <bean id="startQuartz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="musicCollectQuartzJobTrigger"/>  <!-- 调度任务 -->
+            </list>
+        </property>
+        
+        <property name="quartzProperties"> 
+			<props>
+				<prop key="org.quartz.threadPool.threadCount">10</prop>
+			</props>
+		</property>
+    </bean>
+
+    
+</beans>

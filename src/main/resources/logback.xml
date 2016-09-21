@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	
+	<jmxConfigurator />
+	    
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>	    
+	    
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/dengyinlei.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/dengyinlei.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%t] %-5p %c{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+	
+	<!-- project default level -->
+	<logger name="com.cn.dyl.**" level="ERROR" />
+	<logger name="org.springside.modules.mapper.JsonMapper" level="ERROR" />
+	<logger name="com.atomikos" level="ERROR" />
+	<logger name="org.apache.http.client.protocol.ResponseProcessCookies" level="ERROR" />		
+	<logger name="java.sql.Connection" level="ERROR" />
+	<logger name="java.sql.Statement" level="ERROR" />
+	<logger name="java.sql.PreparedStatement" level="ERROR" />
+	
+	<root level="ERROR">
+        <appender-ref ref="file" />
+	</root>
+	
+</configuration>

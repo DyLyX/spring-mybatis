@@ -7,7 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
@@ -26,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springside.modules.mapper.JsonMapper;
-
 import com.cn.dyl.commom.Constant;
 import com.cn.dyl.parser.wangyiyun.entity.LyricMusic;
 import com.cn.dyl.parser.wangyiyun.entity.MusicDetial;
@@ -40,7 +40,6 @@ import com.cn.dyl.pojo.Music;
 import com.cn.dyl.service.SingerService;
 import com.cn.dyl.util.DownLoadUtil;
 import com.cn.dyl.util.ExtractUtil;
-
 @Component
 public class MusicListParser {
 	private static final Logger logger = LoggerFactory.getLogger(MusicListParser.class);
@@ -227,7 +226,7 @@ public class MusicListParser {
 	 */
 	public List<Music> getMusicBySearch(String postSearchBody,int type,int offset,int limit){
 		List<Music> musics=new ArrayList<Music>();
-		String baseUri="http://music.163.com/api/search/pc";
+		String baseUri="http://music.163.com/api/search/pc";//nihao
 		Map<String,Object> params=Maps.newHashMap();
 		params.put("s", postSearchBody);
 		params.put("offset", offset+"");
@@ -283,7 +282,7 @@ public class MusicListParser {
 				music.setPublishDate(df.format(new Date(album.getPublishTime())));//发布时间
 			}
 			music.setMvid(s.getMvid());//mv地址id
-			if(s.getMvid()!=0){
+			if(s.getMvid()!=0){//nihao
 				String mvUrl="http://music.163.com/mv?id="+s.getMvid();
 				music.setMvUrl(mvUrl);
 			}else{
@@ -362,5 +361,17 @@ public class MusicListParser {
 			return null;
 		}
 		return singers;
+	}
+	
+	//指定字符截取
+	private String getVersion(String value){
+		String result = "";
+		Pattern p = Pattern.compile("[v|V]?(\\d\\.[\\d\\.]*)");
+		Matcher m = p.matcher(value);
+		boolean flag =m.find();
+		if(flag){
+			result = m.group(1);
+		}
+		return result;
 	}
 }

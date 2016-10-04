@@ -1,4 +1,4 @@
-0package com.cn.dyl.dao;
+package com.cn.dyl.dao;
 
 import java.io.BufferedReader;
 import java.io.File;

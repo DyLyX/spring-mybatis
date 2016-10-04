@@ -56,8 +56,7 @@ import com.dyl.es.sample.IndexType;
 @Component
 public class ApproveESManager {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ApproveESManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(ApproveESManager.class);
 
 	@Autowired
 	@Qualifier("approveClientTemplate")

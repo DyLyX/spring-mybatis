@@ -1,6 +1,8 @@
 package com.cn.dyl.parser.jsonParserTest;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 /**
  * @JsonIgnoreProperties
          此注解是类注解，作用是json序列化时将Java bean中的一些属性忽略掉，序列化和反序列化都受影响。
@@ -32,6 +34,8 @@ public class JsonObject {
 	private String name;
 	private int age;
 	private boolean sex;
+	//GMT(Greenwich Mean Time)是格林尼治标准时间，+08:00 指标准时间加8小时，也就是北京时间。
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+08:00")
 	private Date birthday;
 	private String word;
 	private double salary;

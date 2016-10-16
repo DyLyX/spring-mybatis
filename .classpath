@@ -36,5 +36,6 @@
 	<classpathentry kind="lib" path="D:/ProgramCode/erweima/lib/core-2.2.jar"/>
 	<classpathentry kind="lib" path="D:/ProgramCode/erweima/lib/javase-2.2.jar"/>
 	<classpathentry kind="lib" path="json-lib-2.4-jdk15.jar"/>
+	<classpathentry kind="lib" path="C:/Users/93648/Downloads/juniversalchardet-1.0.3.jar" sourcepath="C:/Users/93648/Downloads/juniversalchardet-1.0.3-sources.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

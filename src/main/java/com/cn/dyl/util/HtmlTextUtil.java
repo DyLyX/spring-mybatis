@@ -13,31 +13,6 @@ public class HtmlTextUtil {
 
 	private static Pattern xmlEncodingPattern = Pattern.compile("encoding\\s*=\\s*['\"]?([\\w-]*)");
 	
-	//由于StringUtils.deleteWhitespace 删除了所有的空格，当要格式化的内容是英语时会导致单词间的空格也被删除，
-	//使所有的单词连在一块
-	public static String formatContent(String rawInput) {
-		if(rawInput == null) {
-			return "";
-		}
-		return deleteScriptAndStyleTag(
-				replaceAllIgnoreCase(rawInput, "<[^>]*? style=\"[^\"]*?display\\s*:\\s*none[^>]*?>[\\s\\S]*?</[^>]*?>", "")).replaceAll("\n", "")
-				.replaceAll("(<[bB][rR]\\s*?/?>|</[pP]>|<[Ll][Ii]>|</[Ll][Ii]>|<[Tt][Rr]\\s*?/?>|</[Tt][Rr]>|<[Uu][Ll]\\s*?/?>|</[Uu][Ll]>)", "@BR@")
-				.replaceAll("<[\\S\\s]*?>", "").replaceAll("[ ]+", " ")
-					.replace("&nbsp;", " ")
-					.replaceAll("(@BR@\\s*)+", "\n");
-	}
-	
-	//由于StringUtils.deleteWhitespace 删除了所有的空格，当要格式化的内容是英语时会导致单词间的空格也被删除，
-	//使所有的单词连在一块
-	public static String deleteHtmlTags(String rawInput) {
-		if(rawInput == null) {
-			return "";
-		}
-		
-		return replaceAllIgnoreCase(rawInput, "<[^>]*? style=\"[^\"]*?display\\s*:\\s*none[^>]*?>[\\s\\S]*?</[^>]*?>", "")
-				.replaceAll("<[\\S\\s]*?>", "").replaceAll("[ ]+", " ").replace("&nbsp;", " ");
-	}
-	
 	/**
 	 * 不区分大小写替换
 	 * @param source
@@ -46,19 +21,9 @@ public class HtmlTextUtil {
 	 * @return
 	 */
 	public static String replaceAllIgnoreCase(String source, String regex, String replacement){ 
-		Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE); 
+		Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE); //启用大小写不敏感的匹配
 		Matcher m = p.matcher(source); 
 		return m.replaceAll(replacement); 
-	}
-	
-	/**
-	 * 删除font干扰标签
-	 * 比如：<font style="font-size:0px;color:#FFF">2 b* I) R3 D) H) ?6 L</font>
-	 * @param rawInput
-	 * @return
-	 */
-	public static String deleteFontAndSizeZoreTag(String rawInput){
-		return replaceAllIgnoreCase(rawInput, "<[^>]*? style=\"[^\"]*?font-size\\s*:\\s*0px[^>]*?>[\\s\\S]*?</[^>]*?>", "");
 	}
 	
 	/**

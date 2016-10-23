@@ -36,7 +36,6 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.projectx.elasticsearch.ClientCallback;
 import org.projectx.elasticsearch.ClientTemplate;
 import org.projectx.elasticsearch.NodeCallback;
-
 import com.dyl.es.sample.IndexType;
 
 public class ESManager {
